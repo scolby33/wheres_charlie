@@ -1,289 +1,422 @@
 ---
 swagger: '2.0'
-
 info:
-    version: '0.1.0'
-    title: Where's Charlie?
-    
+  version: 0.1.0
+  title: "Where's Charlie?"
 paths:
-    /locations:
-        get:
-            description: List location updates.
-            parameters:
-                - name: per_page
-                  in: query
-                  description: The maximum number of entries returned. Default `10` max `200`.
-                  type: integer
-                  minimum: 1
-                  maximum: 200
-                  default: 10
-                - name: page
-                  in: query
-                  description: The page to return. Default `0`.
-                  type: integer
-                  default: 0
-                - name: reverseChronological
-                  in: query
-                  description: Return the results in reverse chronological order (newest first) if `true`. In chronological order if `false`. Default `true`.
-                  type: boolean
-                  default: true
-                - name: show_hidden
-                  in: query
-                  description: Whether to show hidden location updates. Only available to administrators.
-                  type: boolean
-                  default: false
-            responses:
-                200:
-                    description: The locations were retreived.
-                    schema:
-                        $ref: '#/definitions/ArrayOfLocations'
-        post:
-            description: Post a location update.
-            parameters:
-                - name: body
-                  in: body
-                  description: The `Location` object to be created.
-                  required: true
-                  schema:
-                      $ref: '#/definitions/Location'
-            responses:
-                201:
-                    description: The location update was created.
-                    schema:
-                        $ref: '#/definitions/Location'
-        delete:
-            description: Delete *all* location updates. **USE WITH CAUTION.**
-            responses:
-                204:
-                    description: All location updates were deleted.
-    /locations/{id}:
-        get:
-            description: Get a location update.
-            parameters:
-                - name: id
-                  in: path
-                  description: The `id` of the location update to retreive.
-                  required: true
-                  type: string
-                  format: byte
-            responses:
-                200:
-                    description: The location update was retreived.
-                    schema:
-                        $ref: '#/definitions/Location'
-        delete:
-            description: Delete a location update.
-            parameters:
-                - name: id
-                  in: path
-                  description: The `id` of the location update to delete.
-                  required: true
-                  type: string
-                  format: byte
-            responses:
-                204:
-                    description: The location update was deleted.
-        patch:
-            description: Update a location update. `location`, `dateTime`, and `hidden` can be updated by that user or admin. `userId` can be updated by admin.
-            parameters:
-                - name: id
-                  in: path
-                  description: The `id` of the location update to be patched.
-                  required: true
-                  type: string
-                  format: byte
-                - name: body
-                  in: body
-                  description: The partially-filled `Location` object used to patch.
-                  required: true
-                  schema:
-                      $ref: '#/definitions/Location'
-            responses:
-                200:
-                    description: The location update was patched.
-                    schema:
-                        $ref: '#/definitions/Location'
-    /users:
-        get:
-            description: List users.
-            parameters:
-            - name: per_page
-              in: query
-              description: The maximum number of entries returned. Default `10` max `200`.
-              type: integer
-              minimum: 1
-              maximum: 200
-              default: 10
-            - name: page
-              in: query
-              description: The page to return. Default `0`.
-              type: integer
-              default: 10
-            - name: show_hidden
-              in: query
-              description: Whether to show hidden users. Only available to administrators. Default `false`; `true` is ignored if issued by a non-administrator.
-              type: boolean
-              default: false
-            responses:
-                200:
-                    description: The users were retreived.
-                    schema:
-                        $ref: '#/definitions/ArrayOfUsers'
-        post:
-            description: Create a user.
-            parameters:
-            - name: body
-              in: body
-              description: The `User` object to be created.
-              required: true
-              schema:
-                  $ref: '#/definitions/User'
-            responses:
-                201:
-                    description: The user was created.
-                    schema:
-                        $ref: '#/definitions/User'
-        delete:
-            description: Delete *all* users. **USE WITH CAUTION.**
-            responses:
-                204:
-                    description: All users were deleted.
-    /users/{id}:
-        get:
-            description: Get a user.
-            parameters:
-            - name: id
-              in: path
-              description: The `id` of the user to retreive.
-              required: true
-              type: string
-              format: byte
-            responses:
-                200:
-                    description: The user was retreived.
-                    schema:
-                        $ref: '#/definitions/User'
-        delete:
-            description: Delete a user.
-            parameters:
-            - name: id
-              in: path
-              description: The `id` of the user to delete.
-              required: true
-              type: string
-              format: byte
-            responses:
-                204:
-                    description: The user was deleted.
-        patch:
-            description: Update a user. `name` and `hidden` can be updated by that user or an admin; `admin` can be updated by an admin.
-            parameters:
-                - name: id
-                  in: path
-                  description: The `id` of the user to update.
-                  required: true
-                  type: string
-                  format: byte
-                - name: body
-                  in: body
-                  description: The partially-filled `User` object used to patch.
-                  required: true
-                  schema:
-                      $ref: '#/definitions/User'
-            responses:
-                200:
-                    description: The user was patched.
-                    schema:
-                        $ref: '#/definitions/User'
-    /users/{id}/locations:
-        get:
-            description: List a user's location updates.
-            parameters:
-                - name: id
-                  in: path
-                  description: The `id` of the user whose location updates are to be retreived.
-                  required: true
-                  type: string
-                  format: byte
-                - name: per_page
-                  in: query
-                  description: The maximum number of entries returned. Default `10` max `200`.
-                  type: integer
-                  minimum: 1
-                  maximum: 200
-                  default: 10
-                - name: page
-                  in: query
-                  description: The page to return. Default `0`.
-                  type: integer
-                  default: 0
-                - name: reverseChronological
-                  in: query
-                  description: Return the results in reverse chronological order (newest first) if `true`. In chronological order if `false`. Default `true`.
-                  type: boolean
-                  default: true
-                - name: show_hidden
-                  in: query
-                  description: Whether to show hidden location updates. Only available to administrators.
-                  type: boolean
-                  default: false
-            responses:
-                200:
-                    description: The locations were retreived.
-                    schema:
-                        $ref: '#/definitions/ArrayOfLocations'
-    /users/{id}/locations/latest:
-        get:
-            description: Retreive a user's most recent location update.
-            parameters:
-            - name: id
-              in: path
-              description: The `id` of the user whose latest location update is to be retreived.
-              required: true
-              type: string
-              format: byte
-            responses:
-                200:
-                    description: The latest location update was retreived.
-                    schema:
-                        $ref: '#/definitions/Location'
-            
-definitions:
-    Location:
-        required:
-            - locationString
-        properties:
-            id:
-                type: string
-                format: byte
-            userId:
-                type: string
-                format: byte
-            locationString:
-                type: string
-            dateTime:
-                type: string
-                format: date-time
-            hidden:
-                type: boolean
-    User:
-        required:
-            - name
-        properties:
-            id:
-                type: string
-                format: byte
-            name:
-                type: string
-            admin:
-                type: boolean
-            hidden:
-                type: boolean
-    ArrayOfLocations:
-        type: array
-        items:
+  /locations:
+    get:
+      tags:
+        - locations
+      summary: List location updates.
+      parameters:
+        - name: per_page
+          in: query
+          description: The maximum number of entries returned. Default `10` max `200`.
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 10
+        - name: page
+          in: query
+          description: The page to return. Default `0`.
+          type: integer
+          default: 0
+        - name: reverseChronological
+          in: query
+          description: Return the results in reverse chronological order (newest first) if `true`. In chronological order if `false`. Default `true`.
+          type: boolean
+          default: true
+        - name: show_hidden
+          in: query
+          description: Whether to show hidden location updates. Only available to administrators.
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: The locations were retreived.
+          schema:
+            $ref: '#/definitions/ArrayOfLocations'
+    post:
+      tags:
+        - locations
+        - requires auth
+      summary: Post a location update.
+      parameters:
+        - name: body
+          in: body
+          description: The `Location` object to be created.
+          required: true
+          schema:
             $ref: '#/definitions/Location'
-    ArrayOfUsers:
-        type: array
-        items:
+      security:
+        - wheres_charlie_auth:
+            - admin
+        - wheres_charlie_auth:
+            - 'user:post'
+      responses:
+        '201':
+          description: The location update was created.
+          schema:
+            $ref: '#/definitions/Location'
+    delete:
+      tags:
+        - locations
+        - requires auth
+      summary: 'Delete *all* location updates. **USE WITH CAUTION.**'
+      security:
+        - wheres_charlie_auth:
+            - admin
+      responses:
+        '204':
+          description: All location updates were deleted.
+  '/locations/{id}':
+    get:
+      tags:
+        - locations
+      summary: Get a location update.
+      parameters:
+        - name: id
+          in: path
+          description: The `id` of the location update to retreive.
+          required: true
+          type: string
+          format: byte
+      responses:
+        '200':
+          description: The location update was retreived.
+          schema:
+            $ref: '#/definitions/Location'
+    delete:
+      tags:
+        - locations
+        - requires auth
+      summary: Delete a location update.
+      parameters:
+        - name: id
+          in: path
+          description: The `id` of the location update to delete.
+          required: true
+          type: string
+          format: byte
+      security:
+        - wheres_charlie_auth:
+            - admin
+        - wheres_charlie_auth:
+            - 'user:post'
+      responses:
+        '204':
+          description: The location update was deleted.
+    patch:
+      tags:
+        - locations
+        - requires auth
+      summary: 'Update a location update. `location`, `dateTime`, and `hidden` can be updated by that user or admin. `userId` can be updated by admin.'
+      parameters:
+        - name: id
+          in: path
+          description: The `id` of the location update to be patched.
+          required: true
+          type: string
+          format: byte
+        - name: body
+          in: body
+          description: The partially-filled `Location` object used to patch.
+          required: true
+          schema:
+            $ref: '#/definitions/Location'
+      security:
+        - wheres_charlie_auth:
+            - admin
+        - wheres_charlie_auth:
+            - 'user:post'
+      responses:
+        '200':
+          description: The location update was patched.
+          schema:
+            $ref: '#/definitions/Location'
+  /token:
+    post:
+      tags:
+        - users
+      summary: Stuff
+      parameters:
+        - name: grant_type
+          in: query
+          description: The grant type being requested. Must be set to `password`.
+          required: true
+          type: string
+          default: password
+          enum:
+            - password
+        - name: username
+          in: query
+          description: The id of the user being authenticated.
+          required: true
+          type: string
+          format: byte
+        - name: password
+          in: query
+          description: "The user's password."
+          required: true
+          type: string
+        - name: scope
+          in: query
+          description: The requested scopes.
+          required: false
+          type: array
+          items:
+            enum:
+              - admin
+              - 'user:post'
+              - 'user:profile'
+          collectionFormat: ssv
+      responses:
+        '200':
+          description: The authentication succeded.
+          schema:
+            type: object
+            required:
+              - access_token
+              - token_type
+            properties:
+              access_token:
+                type: string
+              token_type:
+                type: string
+              expires_in:
+                type: integer
+              refresh_token:
+                type: string
+              scope:
+                type: string
+  /users:
+    get:
+      tags:
+        - users
+      summary: List users.
+      parameters:
+        - name: per_page
+          in: query
+          description: The maximum number of entries returned. Default `10` max `200`.
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 10
+        - name: page
+          in: query
+          description: The page to return. Default `0`.
+          type: integer
+          default: 10
+        - name: show_hidden
+          in: query
+          description: Whether to show hidden users. Only available to administrators. Default `false`; `true` is ignored if issued by a non-administrator.
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: The users were retreived.
+          schema:
+            $ref: '#/definitions/ArrayOfUsers'
+    post:
+      tags:
+        - users
+        - requires auth
+      summary: Create a user.
+      parameters:
+        - name: body
+          in: body
+          description: The `User` object to be created.
+          required: true
+          schema:
             $ref: '#/definitions/User'
+      security:
+        - wheres_charlie_auth:
+            - admin
+      responses:
+        '201':
+          description: The user was created.
+          schema:
+            $ref: '#/definitions/User'
+    delete:
+      tags:
+        - users
+        - requires auth
+      summary: 'Delete *all* users. **USE WITH CAUTION.**'
+      security:
+        - wheres_charlie_auth:
+            - admin
+      responses:
+        '204':
+          description: All users were deleted.
+  '/users/{id}':
+    get:
+      tags:
+        - users
+      summary: Get a user.
+      parameters:
+        - name: id
+          in: path
+          description: The `id` of the user to retreive.
+          required: true
+          type: string
+          format: byte
+      responses:
+        '200':
+          description: The user was retreived.
+          schema:
+            $ref: '#/definitions/User'
+    delete:
+      tags:
+        - users
+        - requires auth
+      summary: Delete a user.
+      parameters:
+        - name: id
+          in: path
+          description: The `id` of the user to delete.
+          required: true
+          type: string
+          format: byte
+      security:
+        - wheres_charlie_auth:
+            - admin
+        - wheres_charlie_auth:
+            - 'user:profile'
+      responses:
+        '204':
+          description: The user was deleted.
+    patch:
+      tags:
+        - users
+        - requires auth
+      summary: Update a user. `name` and `hidden` can be updated by that user or an admin; `admin` can be updated by an admin.
+      parameters:
+        - name: id
+          in: path
+          description: The `id` of the user to update.
+          required: true
+          type: string
+          format: byte
+        - name: body
+          in: body
+          description: The partially-filled `User` object used to patch.
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      security:
+        - wheres_charlie_auth:
+            - admin
+        - wheres_charlie_auth:
+            - 'user:profile'
+      responses:
+        '200':
+          description: The user was patched.
+          schema:
+            $ref: '#/definitions/User'
+  '/users/{id}/locations':
+    get:
+      tags:
+        - users
+      summary: "List a user's location updates."
+      parameters:
+        - name: id
+          in: path
+          description: The `id` of the user whose location updates are to be retreived.
+          required: true
+          type: string
+          format: byte
+        - name: per_page
+          in: query
+          description: The maximum number of entries returned. Default `10` max `200`.
+          type: integer
+          minimum: 1
+          maximum: 200
+          default: 10
+        - name: page
+          in: query
+          description: The page to return. Default `0`.
+          type: integer
+          default: 0
+        - name: reverseChronological
+          in: query
+          description: Return the results in reverse chronological order (newest first) if `true`. In chronological order if `false`. Default `true`.
+          type: boolean
+          default: true
+        - name: show_hidden
+          in: query
+          description: Whether to show hidden location updates. Only available to administrators.
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: The locations were retreived.
+          schema:
+            $ref: '#/definitions/ArrayOfLocations'
+  '/users/{id}/locations/latest':
+    get:
+      tags:
+        - users
+      summary: "Retreive a user's most recent location update."
+      parameters:
+        - name: id
+          in: path
+          description: The `id` of the user whose latest location update is to be retreived.
+          required: true
+          type: string
+          format: byte
+      responses:
+        '200':
+          description: The latest location update was retreived.
+          schema:
+            $ref: '#/definitions/Location'
+securityDefinitions:
+  wheres_charlie_auth:
+    type: oauth2
+    flow: password
+    tokenUrl: /token
+    scopes:
+      admin: Administer all users and their posts.
+      'user:post': "Manage a user's posts."
+      'user:profile': "Manage a user's profile information."
+definitions:
+  Location:
+    type: object
+    required:
+      - locationString
+    properties:
+      id:
+        type: string
+        format: byte
+      userId:
+        type: string
+        format: byte
+      locationString:
+        type: string
+      dateTime:
+        type: string
+        format: date-time
+      hidden:
+        type: boolean
+  User:
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        type: string
+        format: byte
+      name:
+        type: string
+      admin:
+        type: boolean
+      hidden:
+        type: boolean
+  ArrayOfLocations:
+    type: array
+    items:
+      $ref: '#/definitions/Location'
+  ArrayOfUsers:
+    type: array
+    items:
+      $ref: '#/definitions/User'
