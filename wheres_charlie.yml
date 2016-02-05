@@ -50,10 +50,7 @@ paths:
           schema:
             $ref: '#/definitions/Location'
       security:
-        - wheres_charlie_auth:
-            - admin
-        - wheres_charlie_auth:
-            - 'user:post'
+        - wheres_charlie_key: []
       responses:
         '201':
           description: The location update was created.
@@ -65,8 +62,7 @@ paths:
         - requires auth
       summary: 'Delete *all* location updates. **USE WITH CAUTION.**'
       security:
-        - wheres_charlie_auth:
-            - admin
+        - wheres_charlie_key: []
       responses:
         '204':
           description: All location updates were deleted.
@@ -100,10 +96,7 @@ paths:
           type: string
           format: byte
       security:
-        - wheres_charlie_auth:
-            - admin
-        - wheres_charlie_auth:
-            - 'user:post'
+        - wheres_charlie_key: []
       responses:
         '204':
           description: The location update was deleted.
@@ -126,10 +119,7 @@ paths:
           schema:
             $ref: '#/definitions/Location'
       security:
-        - wheres_charlie_auth:
-            - admin
-        - wheres_charlie_auth:
-            - 'user:post'
+        - wheres_charlie_key: []
       responses:
         '200':
           description: The location update was patched.
@@ -232,8 +222,7 @@ paths:
           schema:
             $ref: '#/definitions/User'
       security:
-        - wheres_charlie_auth:
-            - admin
+        - wheres_charlie_key: []
       responses:
         '201':
           description: The user was created.
@@ -245,8 +234,7 @@ paths:
         - requires auth
       summary: 'Delete *all* users. **USE WITH CAUTION.**'
       security:
-        - wheres_charlie_auth:
-            - admin
+        - wheres_charlie_key: []
       responses:
         '204':
           description: All users were deleted.
@@ -280,10 +268,7 @@ paths:
           type: string
           format: byte
       security:
-        - wheres_charlie_auth:
-            - admin
-        - wheres_charlie_auth:
-            - 'user:profile'
+        - wheres_charlie_key: []
       responses:
         '204':
           description: The user was deleted.
@@ -306,10 +291,7 @@ paths:
           schema:
             $ref: '#/definitions/User'
       security:
-        - wheres_charlie_auth:
-            - admin
-        - wheres_charlie_auth:
-            - 'user:profile'
+        - wheres_charlie_key: []
       responses:
         '200':
           description: The user was patched.
@@ -372,14 +354,11 @@ paths:
           schema:
             $ref: '#/definitions/Location'
 securityDefinitions:
-  wheres_charlie_auth:
-    type: oauth2
-    flow: password
-    tokenUrl: /token
-    scopes:
-      admin: Administer all users and their posts.
-      'user:post': "Manage a user's posts."
-      'user:profile': "Manage a user's profile information."
+  wheres_charlie_key:
+    type: apiKey
+    description: JWT-based api key authorization.
+    name: Authorization
+    in: header
 definitions:
   Location:
     type: object
