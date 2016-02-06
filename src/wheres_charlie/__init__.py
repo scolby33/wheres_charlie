@@ -8,4 +8,4 @@ app.config.from_object('wheres_charlie.config.DevelopmentConfig')
 con.add_api('wheres_charlie.yml')
 
 from . import models
-from . import jwt
+from . import security

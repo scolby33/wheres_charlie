@@ -1,11 +1,12 @@
 from flask_jwt import JWT
+from flask.ext.security import Security, SQLAlchemyUserDatastore
 from flask_security.utils import verify_and_update_password
-from werkzeug.security import safe_str_cmp
 
 from . import app, handlers, models
 
+
 def authenticate(username, password, scopes):
-    user = models.user_datastore.get_user(username)
+    user = user_datastore.get_user(username)
     if user and verify_and_update_password(password, user):
         scope_perms = []
         for scope in scopes:
@@ -16,7 +17,21 @@ def authenticate(username, password, scopes):
 
 def identity(payload):
     user_id = payload['sub']
-    return models.user_datastore.get_user(user_id)
+    return user_datastore.get_user(user_id)
+
+user_datastore = SQLAlchemyUserDatastore(models.db, models.User, models.Role)
+security = Security(app, user_datastore)
+
+
+@app.before_first_request
+def create_default_user():
+    models.db.create_all()
+    new_role = user_datastore.find_or_create_role('admin')
+    new_user = user_datastore.create_user(name='scott', password='pass')
+    user_datastore.add_role_to_user(new_user, new_role)
+    models.db.session.commit()
+
+models.db.create_all()
 
 jwt = JWT(app=None, authentication_handler=authenticate, identity_handler=identity)
 jwt.app = app
