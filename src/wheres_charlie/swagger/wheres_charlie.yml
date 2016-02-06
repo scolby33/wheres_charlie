@@ -9,6 +9,7 @@ paths:
       tags:
         - locations
       summary: List location updates.
+      operationId: wheres_charlie.controllers.default_controller.locations_get
       parameters:
         - name: per_page
           in: query
@@ -40,7 +41,7 @@ paths:
     post:
       tags:
         - locations
-        - requires auth
+      operationId: wheres_charlie.controllers.default_controller.locations_post
       summary: Post a location update.
       parameters:
         - name: body
@@ -59,8 +60,8 @@ paths:
     delete:
       tags:
         - locations
-        - requires auth
       summary: 'Delete *all* location updates. **USE WITH CAUTION.**'
+      operationId: wheres_charlie.controllers.default_controller.locations_delete
       security:
         - wheres_charlie_key: []
       responses:
@@ -71,6 +72,7 @@ paths:
       tags:
         - locations
       summary: Get a location update.
+      operationId: wheres_charlie.controllers.default_controller.locations_id_get
       parameters:
         - name: id
           in: path
@@ -86,8 +88,8 @@ paths:
     delete:
       tags:
         - locations
-        - requires auth
       summary: Delete a location update.
+      operationId: wheres_charlie.controllers.default_controller.locations_id_delete
       parameters:
         - name: id
           in: path
@@ -103,8 +105,8 @@ paths:
     patch:
       tags:
         - locations
-        - requires auth
       summary: 'Update a location update. `location`, `dateTime`, and `hidden` can be updated by that user or admin. `userId` can be updated by admin.'
+      operationId: wheres_charlie.controllers.default_controller.locations_id_patch
       parameters:
         - name: id
           in: path
@@ -130,38 +132,31 @@ paths:
       tags:
         - users
       summary: Stuff
+      operationId: wheres_charlie.controllers.default_controller.token_post
       parameters:
-        - name: grant_type
-          in: query
-          description: The grant type being requested. Must be set to `password`.
+        - name: body
+          in: body
+          description: Stuff
           required: true
-          type: string
-          default: password
-          enum:
-            - password
-        - name: username
-          in: query
-          description: The id of the user being authenticated.
-          required: true
-          type: string
-          format: byte
-        - name: password
-          in: query
-          description: "The user's password."
-          required: true
-          type: string
-        - name: scope
-          in: query
-          description: The requested scopes.
-          required: false
-          type: array
-          items:
-            type: string
-            enum:
-              - admin
-              - 'user:post'
-              - 'user:profile'
-          collectionFormat: ssv
+          schema:
+            type: object
+            required:
+              - username
+              - password
+              - scopes
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+              scopes:
+                type: array
+                items:
+                  type: string
+                  enum:
+                    - admin
+                    - 'user:post'
+                    - 'user:profile'
       responses:
         '200':
           description: The authentication succeded.
@@ -186,6 +181,7 @@ paths:
       tags:
         - users
       summary: List users.
+      operationId: wheres_charlie.controllers.default_controller.users_get
       parameters:
         - name: per_page
           in: query
@@ -212,8 +208,8 @@ paths:
     post:
       tags:
         - users
-        - requires auth
       summary: Create a user.
+      operationId: wheres_charlie.controllers.default_controller.users_post
       parameters:
         - name: body
           in: body
@@ -231,8 +227,8 @@ paths:
     delete:
       tags:
         - users
-        - requires auth
       summary: 'Delete *all* users. **USE WITH CAUTION.**'
+      operationId: wheres_charlie.controllers.default_controller.users_delete
       security:
         - wheres_charlie_key: []
       responses:
@@ -243,6 +239,7 @@ paths:
       tags:
         - users
       summary: Get a user.
+      operationId: wheres_charlie.controllers.default_controller.users_id_get
       parameters:
         - name: id
           in: path
@@ -258,8 +255,8 @@ paths:
     delete:
       tags:
         - users
-        - requires auth
       summary: Delete a user.
+      operationId: wheres_charlie.controllers.default_controller.users_id_delete
       parameters:
         - name: id
           in: path
@@ -275,8 +272,8 @@ paths:
     patch:
       tags:
         - users
-        - requires auth
       summary: Update a user. `name` and `hidden` can be updated by that user or an admin; `admin` can be updated by an admin.
+      operationId: wheres_charlie.controllers.default_controller.users_id_patch
       parameters:
         - name: id
           in: path
@@ -302,6 +299,7 @@ paths:
       tags:
         - users
       summary: "List a user's location updates."
+      operationId: wheres_charlie.controllers.default_controller.users_id_locations_get
       parameters:
         - name: id
           in: path
@@ -341,6 +339,7 @@ paths:
       tags:
         - users
       summary: "Retreive a user's most recent location update."
+      operationId: wheres_charlie.controllers.default_controller.users_id_locations_latest_get
       parameters:
         - name: id
           in: path
