@@ -1,0 +1,473 @@
+---
+swagger: "2.0"
+info:
+  version: "0.1.0"
+  title: "Where's Charlie?"
+paths:
+  /locations:
+    get:
+      tags:
+      - "locations"
+      summary: "List location updates."
+      operationId: "wheres_charlie.controllers.default_controller.locations_get"
+      parameters:
+      - name: "per_page"
+        in: "query"
+        description: "The maximum number of entries returned. Default `10` max `200`."
+        required: false
+        type: "integer"
+        default: 10
+        maximum: 200.0
+        minimum: 1.0
+      - name: "page"
+        in: "query"
+        description: "The page to return. Default `0`."
+        required: false
+        type: "integer"
+        default: 0
+      - name: "reverseChronological"
+        in: "query"
+        description: "Return the results in reverse chronological order (newest first)\
+          \ if `true`. In chronological order if `false`. Default `true`."
+        required: false
+        type: "boolean"
+        default: true
+      - name: "show_hidden"
+        in: "query"
+        description: "Whether to show hidden location updates. Only available to administrators."
+        required: false
+        type: "boolean"
+        default: false
+      responses:
+        200:
+          description: "The locations were retreived."
+          schema:
+            $ref: "#/definitions/ArrayOfLocations"
+      x-tags:
+      - tag: "locations"
+    post:
+      tags:
+      - "locations"
+      summary: "Post a location update."
+      operationId: "wheres_charlie.controllers.default_controller.locations_post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The `Location` object to be created."
+        required: true
+        schema:
+          $ref: "#/definitions/Location"
+      responses:
+        201:
+          description: "The location update was created."
+          schema:
+            $ref: "#/definitions/Location"
+      security:
+      - wheres_charlie_key: []
+      x-tags:
+      - hasMore: "true"
+        tag: "locations"
+      - tag: "requires auth"
+    delete:
+      tags:
+      - "locations"
+      summary: "Delete *all* location updates. **USE WITH CAUTION.**"
+      operationId: "wheres_charlie.controllers.default_controller.locations_delete"
+      parameters: []
+      responses:
+        204:
+          description: "All location updates were deleted."
+      security:
+      - wheres_charlie_key: []
+      x-tags:
+      - hasMore: "true"
+        tag: "locations"
+      - tag: "requires auth"
+  /locations/{id}:
+    get:
+      tags:
+      - "locations"
+      summary: "Get a location update."
+      operationId: "wheres_charlie.controllers.default_controller.locations_id_get"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The `id` of the location update to retreive."
+        required: true
+        type: "string"
+        format: "byte"
+      responses:
+        200:
+          description: "The location update was retreived."
+          schema:
+            $ref: "#/definitions/Location"
+      x-tags:
+      - tag: "locations"
+    delete:
+      tags:
+      - "locations"
+      summary: "Delete a location update."
+      operationId: "wheres_charlie.controllers.default_controller.locations_id_delete"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The `id` of the location update to delete."
+        required: true
+        type: "string"
+        format: "byte"
+      responses:
+        204:
+          description: "The location update was deleted."
+      security:
+      - wheres_charlie_key: []
+      x-tags:
+      - hasMore: "true"
+        tag: "locations"
+      - tag: "requires auth"
+    patch:
+      tags:
+      - "locations"
+      summary: "Update a location update. `location`, `dateTime`, and `hidden` can\
+        \ be updated by that user or admin. `userId` can be updated by admin."
+      operationId: "wheres_charlie.controllers.default_controller.locations_id_patch"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The `id` of the location update to be patched."
+        required: true
+        type: "string"
+        format: "byte"
+      - in: "body"
+        name: "body"
+        description: "The partially-filled `Location` object used to patch."
+        required: true
+        schema:
+          $ref: "#/definitions/Location"
+      responses:
+        200:
+          description: "The location update was patched."
+          schema:
+            $ref: "#/definitions/Location"
+      security:
+      - wheres_charlie_key: []
+      x-tags:
+      - hasMore: "true"
+        tag: "locations"
+      - tag: "requires auth"
+  /token:
+    post:
+      tags:
+      - "users"
+      summary: "Stuff"
+      operationId: "wheres_charlie.controllers.default_controller.token_post"
+      parameters:
+      - name: "grant_type"
+        in: "query"
+        description: "The grant type being requested. Must be set to `password`."
+        required: true
+        type: "string"
+        default: "password"
+        enum:
+        - "password"
+      - name: "username"
+        in: "query"
+        description: "The id of the user being authenticated."
+        required: true
+        type: "string"
+        format: "byte"
+      - name: "password"
+        in: "query"
+        description: "The user's password."
+        required: true
+        type: "string"
+      - name: "scope"
+        in: "query"
+        description: "The requested scopes."
+        required: false
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "admin"
+          - "user:post"
+          - "user:profile"
+        collectionFormat: "ssv"
+      responses:
+        200:
+          description: "The authentication succeded."
+          schema:
+            $ref: "#/definitions/inline_response_200"
+      x-tags:
+      - tag: "users"
+  /users:
+    get:
+      tags:
+      - "users"
+      summary: "List users."
+      operationId: "wheres_charlie.controllers.default_controller.users_get"
+      parameters:
+      - name: "per_page"
+        in: "query"
+        description: "The maximum number of entries returned. Default `10` max `200`."
+        required: false
+        type: "integer"
+        default: 10
+        maximum: 200.0
+        minimum: 1.0
+      - name: "page"
+        in: "query"
+        description: "The page to return. Default `0`."
+        required: false
+        type: "integer"
+        default: 10
+      - name: "show_hidden"
+        in: "query"
+        description: "Whether to show hidden users. Only available to administrators.\
+          \ Default `false`; `true` is ignored if issued by a non-administrator."
+        required: false
+        type: "boolean"
+        default: false
+      responses:
+        200:
+          description: "The users were retreived."
+          schema:
+            $ref: "#/definitions/ArrayOfUsers"
+      x-tags:
+      - tag: "users"
+    post:
+      tags:
+      - "users"
+      summary: "Create a user."
+      operationId: "wheres_charlie.controllers.default_controller.users_post"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "The `User` object to be created."
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        201:
+          description: "The user was created."
+          schema:
+            $ref: "#/definitions/User"
+      security:
+      - wheres_charlie_key: []
+      x-tags:
+      - hasMore: "true"
+        tag: "users"
+      - tag: "requires auth"
+    delete:
+      tags:
+      - "users"
+      summary: "Delete *all* users. **USE WITH CAUTION.**"
+      operationId: "wheres_charlie.controllers.default_controller.users_delete"
+      parameters: []
+      responses:
+        204:
+          description: "All users were deleted."
+      security:
+      - wheres_charlie_key: []
+      x-tags:
+      - hasMore: "true"
+        tag: "users"
+      - tag: "requires auth"
+  /users/{id}:
+    get:
+      tags:
+      - "users"
+      summary: "Get a user."
+      operationId: "wheres_charlie.controllers.default_controller.users_id_get"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The `id` of the user to retreive."
+        required: true
+        type: "string"
+        format: "byte"
+      responses:
+        200:
+          description: "The user was retreived."
+          schema:
+            $ref: "#/definitions/User"
+      x-tags:
+      - tag: "users"
+    delete:
+      tags:
+      - "users"
+      summary: "Delete a user."
+      operationId: "wheres_charlie.controllers.default_controller.users_id_delete"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The `id` of the user to delete."
+        required: true
+        type: "string"
+        format: "byte"
+      responses:
+        204:
+          description: "The user was deleted."
+      security:
+      - wheres_charlie_key: []
+      x-tags:
+      - hasMore: "true"
+        tag: "users"
+      - tag: "requires auth"
+    patch:
+      tags:
+      - "users"
+      summary: "Update a user. `name` and `hidden` can be updated by that user or\
+        \ an admin; `admin` can be updated by an admin."
+      operationId: "wheres_charlie.controllers.default_controller.users_id_patch"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The `id` of the user to update."
+        required: true
+        type: "string"
+        format: "byte"
+      - in: "body"
+        name: "body"
+        description: "The partially-filled `User` object used to patch."
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "The user was patched."
+          schema:
+            $ref: "#/definitions/User"
+      security:
+      - wheres_charlie_key: []
+      x-tags:
+      - hasMore: "true"
+        tag: "users"
+      - tag: "requires auth"
+  /users/{id}/locations:
+    get:
+      tags:
+      - "users"
+      summary: "List a user's location updates."
+      operationId: "wheres_charlie.controllers.default_controller.users_id_locations_get"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The `id` of the user whose location updates are to be retreived."
+        required: true
+        type: "string"
+        format: "byte"
+      - name: "per_page"
+        in: "query"
+        description: "The maximum number of entries returned. Default `10` max `200`."
+        required: false
+        type: "integer"
+        default: 10
+        maximum: 200.0
+        minimum: 1.0
+      - name: "page"
+        in: "query"
+        description: "The page to return. Default `0`."
+        required: false
+        type: "integer"
+        default: 0
+      - name: "reverseChronological"
+        in: "query"
+        description: "Return the results in reverse chronological order (newest first)\
+          \ if `true`. In chronological order if `false`. Default `true`."
+        required: false
+        type: "boolean"
+        default: true
+      - name: "show_hidden"
+        in: "query"
+        description: "Whether to show hidden location updates. Only available to administrators."
+        required: false
+        type: "boolean"
+        default: false
+      responses:
+        200:
+          description: "The locations were retreived."
+          schema:
+            $ref: "#/definitions/ArrayOfLocations"
+      x-tags:
+      - tag: "users"
+  /users/{id}/locations/latest:
+    get:
+      tags:
+      - "users"
+      summary: "Retreive a user's most recent location update."
+      operationId: "wheres_charlie.controllers.default_controller.users_id_locations_latest_get"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The `id` of the user whose latest location update is to be retreived."
+        required: true
+        type: "string"
+        format: "byte"
+      responses:
+        200:
+          description: "The latest location update was retreived."
+          schema:
+            $ref: "#/definitions/Location"
+      x-tags:
+      - tag: "users"
+securityDefinitions:
+  wheres_charlie_key:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  Location:
+    type: "object"
+    required:
+    - "locationString"
+    properties:
+      id:
+        type: "string"
+        format: "byte"
+      userId:
+        type: "string"
+        format: "byte"
+      locationString:
+        type: "string"
+      dateTime:
+        type: "string"
+        format: "date-time"
+      hidden:
+        type: "boolean"
+  User:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      id:
+        type: "string"
+        format: "byte"
+      name:
+        type: "string"
+      admin:
+        type: "boolean"
+      hidden:
+        type: "boolean"
+  ArrayOfLocations:
+    type: "array"
+    items:
+      $ref: "#/definitions/Location"
+  ArrayOfUsers:
+    type: "array"
+    items:
+      $ref: "#/definitions/User"
+  inline_response_200:
+    required:
+    - "access_token"
+    - "token_type"
+    properties:
+      access_token:
+        type: "string"
+      refresh_token:
+        type: "string"
+      scope:
+        type: "string"
+      token_type:
+        type: "string"
+      expires_in:
+        type: "integer"
