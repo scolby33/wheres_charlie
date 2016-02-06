@@ -349,7 +349,7 @@ definitions:
   Location:
     type: object
     required:
-      - locationString
+      - location_string
     properties:
       location_id:
         type: string
