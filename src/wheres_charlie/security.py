@@ -30,6 +30,9 @@ def create_default_user():
     new_user = user_datastore.create_user(name='scott', password='pass')
     user_datastore.add_role_to_user(new_user, new_role)
     models.db.session.commit()
+    new_location = models.Location(user_id=new_user.user_id, location_string='Timbuktu')
+    models.db.session.add(new_location)
+    models.db.session.commit()
 
 models.db.create_all()
 
