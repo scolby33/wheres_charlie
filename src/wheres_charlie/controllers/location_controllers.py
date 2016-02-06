@@ -1,8 +1,10 @@
 from ..handlers import jwt_required
+from .. import models
 
 
-def locations_get(perPage, page, reverseChronological, showHidden) -> str:
-    return 'do some magic!'
+def locations_get(perPage=10, page=0, reverseChronological=True, showHidden=False) -> str:
+    query = models.Location.query.order_by(models.Location.date_time).all()
+    return models.LocationSchema().dump(*query).data
 
 
 @jwt_required({'admin', 'user:post'})
