@@ -161,21 +161,8 @@ paths:
         '200':
           description: The authentication succeded.
           schema:
-            type: object
-            required:
-              - access_token
-              - token_type
-            properties:
-              access_token:
-                type: string
-              token_type:
-                type: string
-              expires_in:
-                type: integer
-              refresh_token:
-                type: string
-              scope:
-                type: string
+            $ref: '#/definitions/AccessToken'
+
   /users:
     get:
       tags:
@@ -364,33 +351,46 @@ definitions:
     required:
       - locationString
     properties:
-      id:
+      location_id:
         type: string
         format: byte
-      userId:
+      user_id:
         type: string
         format: byte
-      locationString:
+      location_string:
         type: string
-      dateTime:
+      date_time:
         type: string
         format: date-time
-      hidden:
+      active:
         type: boolean
   User:
     type: object
     required:
       - name
     properties:
-      id:
+      user_id:
         type: string
         format: byte
       name:
         type: string
-      admin:
+      active:
         type: boolean
-      hidden:
-        type: boolean
+      roles:
+        type: array
+        items:
+          type: string
+          enum:
+            - admin
+            - 'user:post'
+            - 'user:profile'
+  AccessToken:
+    type: object
+    required:
+      - access_token
+    properties:
+      access_token:
+        type: string
   ArrayOfLocations:
     type: array
     items:
