@@ -39,9 +39,9 @@ class Location(db.Model):
 class UserSchema(ma.ModelSchema):
     class Meta:
         model = User
+        exclude = ('password',)
 
 
 class LocationSchema(ma.ModelSchema):
     class Meta:
         model = Location
-
