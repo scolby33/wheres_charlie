@@ -9,7 +9,7 @@ paths:
       tags:
         - locations
       summary: List location updates.
-      operationId: wheres_charlie.controllers.default_controller.locations_get
+      operationId: wheres_charlie.controllers.location_controllers.locations_get
       parameters:
         - name: per_page
           in: query
@@ -41,7 +41,7 @@ paths:
     post:
       tags:
         - locations
-      operationId: wheres_charlie.controllers.default_controller.locations_post
+      operationId: wheres_charlie.controllers.location_controllers.locations_post
       summary: Post a location update.
       parameters:
         - name: body
@@ -61,7 +61,7 @@ paths:
       tags:
         - locations
       summary: 'Delete *all* location updates. **USE WITH CAUTION.**'
-      operationId: wheres_charlie.controllers.default_controller.locations_delete
+      operationId: wheres_charlie.controllers.location_controllers.locations_delete
       security:
         - wheres_charlie_key: []
       responses:
@@ -72,7 +72,7 @@ paths:
       tags:
         - locations
       summary: Get a location update.
-      operationId: wheres_charlie.controllers.default_controller.locations_id_get
+      operationId: wheres_charlie.controllers.location_controllers.locations_id_get
       parameters:
         - name: id
           in: path
@@ -89,7 +89,7 @@ paths:
       tags:
         - locations
       summary: Delete a location update.
-      operationId: wheres_charlie.controllers.default_controller.locations_id_delete
+      operationId: wheres_charlie.controllers.location_controllers.locations_id_delete
       parameters:
         - name: id
           in: path
@@ -106,7 +106,7 @@ paths:
       tags:
         - locations
       summary: 'Update a location update. `location`, `dateTime`, and `hidden` can be updated by that user or admin. `userId` can be updated by admin.'
-      operationId: wheres_charlie.controllers.default_controller.locations_id_patch
+      operationId: wheres_charlie.controllers.location_controllers.locations_id_patch
       parameters:
         - name: id
           in: path
@@ -132,7 +132,7 @@ paths:
       tags:
         - users
       summary: Stuff
-      operationId: wheres_charlie.controllers.default_controller.token_post
+      operationId: wheres_charlie.controllers.token_controllers.token_post
       parameters:
         - name: body
           in: body
@@ -168,7 +168,7 @@ paths:
       tags:
         - users
       summary: List users.
-      operationId: wheres_charlie.controllers.default_controller.users_get
+      operationId: wheres_charlie.controllers.user_controllers.users_get
       parameters:
         - name: per_page
           in: query
@@ -196,7 +196,7 @@ paths:
       tags:
         - users
       summary: Create a user.
-      operationId: wheres_charlie.controllers.default_controller.users_post
+      operationId: wheres_charlie.controllers.user_controllers.users_post
       parameters:
         - name: body
           in: body
@@ -215,7 +215,7 @@ paths:
       tags:
         - users
       summary: 'Delete *all* users. **USE WITH CAUTION.**'
-      operationId: wheres_charlie.controllers.default_controller.users_delete
+      operationId: wheres_charlie.controllers.user_controllers.users_delete
       security:
         - wheres_charlie_key: []
       responses:
@@ -226,7 +226,7 @@ paths:
       tags:
         - users
       summary: Get a user.
-      operationId: wheres_charlie.controllers.default_controller.users_id_get
+      operationId: wheres_charlie.controllers.user_controllers.users_id_get
       parameters:
         - name: id
           in: path
@@ -243,7 +243,7 @@ paths:
       tags:
         - users
       summary: Delete a user.
-      operationId: wheres_charlie.controllers.default_controller.users_id_delete
+      operationId: wheres_charlie.controllers.user_controllers.users_id_delete
       parameters:
         - name: id
           in: path
@@ -260,7 +260,7 @@ paths:
       tags:
         - users
       summary: Update a user. `name` and `hidden` can be updated by that user or an admin; `admin` can be updated by an admin.
-      operationId: wheres_charlie.controllers.default_controller.users_id_patch
+      operationId: wheres_charlie.controllers.user_controllers.users_id_patch
       parameters:
         - name: id
           in: path
@@ -286,7 +286,7 @@ paths:
       tags:
         - users
       summary: "List a user's location updates."
-      operationId: wheres_charlie.controllers.default_controller.users_id_locations_get
+      operationId: wheres_charlie.controllers.user_controllers.users_id_locations_get
       parameters:
         - name: id
           in: path
@@ -326,7 +326,7 @@ paths:
       tags:
         - users
       summary: "Retreive a user's most recent location update."
-      operationId: wheres_charlie.controllers.default_controller.users_id_locations_latest_get
+      operationId: wheres_charlie.controllers.user_controllers.users_id_locations_latest_get
       parameters:
         - name: id
           in: path

@@ -1,36 +1,4 @@
-from ..handlers import jwt_required, auth_request_handler
-
-
-def locations_get(perPage, page, reverseChronological, showHidden) -> str:
-    return 'do some magic!'
-
-
-@jwt_required({'admin', 'user:post'})
-def locations_post(body) -> str:
-    return 'do some magic!'
-
-
-@jwt_required({'admin'})
-def locations_delete() -> str:
-    return 'do some magic!'
-
-
-def locations_id_get(id) -> str:
-    return 'do some magic!'
-
-
-@jwt_required({'admin', 'user:post'})
-def locations_id_delete(id) -> str:
-    return 'do some magic!'
-
-
-@jwt_required({'admin', 'user:post'})
-def locations_id_patch(id, body) -> str:
-    return 'do some magic!'
-
-
-def token_post(body) -> str:
-    return auth_request_handler()
+from ..handlers import jwt_required
 
 
 def users_get(perPage, page, showHidden) -> str:
