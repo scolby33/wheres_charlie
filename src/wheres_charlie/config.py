@@ -1,6 +1,8 @@
 class Config(object):
     DEBUG = False
 
+    SECURITY_USER_IDENTITY_ATTRIBUTES = ['user_id', 'name']
+
     JWT_AUTH_SCOPES_KEY = 'scopes'
 
 
