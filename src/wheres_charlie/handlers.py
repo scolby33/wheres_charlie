@@ -54,7 +54,7 @@ def payload_handler(identity, scopes):
     iat = datetime.datetime.utcnow()
     exp = iat + current_app.config.get('JWT_EXPIRATION_DELTA')
     nbf = iat + current_app.config.get('JWT_NOT_BEFORE_DELTA')
-    sub = getattr(identity, 'id') or identity['id']
+    sub = getattr(identity, 'user_id') or identity['user_id']
     # expiration, issued at, not before, subject, scopes
     return {'exp': exp, 'iat': iat, 'nbf': nbf, 'sub': sub, 'scopes': list(scopes)}
 
