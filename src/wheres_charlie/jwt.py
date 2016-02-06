@@ -38,7 +38,7 @@ app.app.config['JWT_SECRET_KEY']= 'secret'
 app.app.config['JWT_AUTH_SCOPES_KEY'] = 'scopes'
 
 jwt = JWT(app=None, authentication_handler=authenticate, identity_handler=identity)
-jwt.app = app.app
+jwt.app = app
 jwt.auth_request_callback = handlers.auth_request_handler
 jwt.jwt_encode_callback = handlers.encode_handler
 jwt.jwt_payload_callback = handlers.payload_handler

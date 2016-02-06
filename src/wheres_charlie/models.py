@@ -3,7 +3,7 @@ from flask.ext.security import Security, SQLAlchemyUserDatastore, UserMixin, Rol
 
 from . import app
 
-db = SQLAlchemy(app.app)
+db = SQLAlchemy(app)
 
 roles_users = db.Table('roles_users',
                        db.Column('user_id', db.Integer(), db.ForeignKey('user.user_id')),
@@ -23,7 +23,8 @@ class User(db.Model, UserMixin):
     active = db.Column(db.Boolean())
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
 
+
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app.app, user_datastore)
+security = Security(app, user_datastore)
 
 db.create_all()
