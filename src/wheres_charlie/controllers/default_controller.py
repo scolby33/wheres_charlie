@@ -1,4 +1,4 @@
-from ..handlers import jwt_required
+from ..handlers import jwt_required, auth_request_handler
 
 
 def locations_get(perPage, page, reverseChronological, showHidden) -> str:
@@ -29,8 +29,8 @@ def locations_id_patch(id, body) -> str:
     return 'do some magic!'
 
 
-def token_post(grantType, username, password, scope) -> str:
-    return 'do some magic!'
+def token_post(body) -> str:
+    return auth_request_handler()
 
 
 def users_get(perPage, page, showHidden) -> str:
