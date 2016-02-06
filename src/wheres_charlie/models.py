@@ -25,4 +25,8 @@ class User(db.Model, UserMixin):
 
 
 class Location(db.Model):
-    pass
+    location_id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.user_id'))
+    location_string = db.Column(db.String(255))
+    date_time = db.Column(db.Date())
+    active = db.Column(db.Boolean())
