@@ -12,14 +12,11 @@ _jwt = LocalProxy(lambda: current_app.extensions['jwt'])
 
 # Handlers for making an authorization request
 def auth_request_handler():
-    print('my auth request')
     data = request.get_json()
-    print(data)
     username = data.get(current_app.config.get('JWT_AUTH_USERNAME_KEY'), None)
     password = data.get(current_app.config.get('JWT_AUTH_PASSWORD_KEY'), None)
     # TODO fix this set
     scopes = set(data.get(current_app.config.get('JWT_AUTH_SCOPES_KEY'), set()))
-    print(scopes)
     criterion = [username, password, scopes, len(data) == 3]
 
     if not all(criterion):
