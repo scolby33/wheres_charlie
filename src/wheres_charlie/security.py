@@ -1,5 +1,5 @@
 from flask_jwt import JWT
-from flask.ext.security import Security, SQLAlchemyUserDatastore
+from flask_security import Security, SQLAlchemyUserDatastore
 from flask_security.utils import verify_and_update_password
 
 from . import app, handlers, models
