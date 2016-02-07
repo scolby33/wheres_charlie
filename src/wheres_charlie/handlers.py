@@ -88,8 +88,8 @@ def _jwt_required(scopes, realm):
     if identity is None:
         raise JWTError('Invalid JWT', 'User does not exist')
     elif scopes:
-            if not scopes.intersection(payload['scopes']):
-                raise JWTError('Invalid JWT', 'Token has wrong scope')
+        if not scopes.intersection(payload['scopes']):
+            raise JWTError('Invalid JWT', 'Token has wrong scope')
 
 
 def jwt_required(scopes=None, realm=None):
@@ -102,6 +102,46 @@ def jwt_required(scopes=None, realm=None):
         @wraps(fn)
         def decorator(*args, **kwargs):
             _jwt_required(scopes, realm or current_app.config['JWT_DEFAULT_REALM'])
+            return fn(*args, **kwargs)
+        return decorator
+    return wrapper
+
+
+def _jwt_optional(realm):
+    """Does the actual work of verifying the JWT data in the current request.
+    Doesn't complain if no JWT is present.
+
+    :param realm: an optional realm
+    """
+
+    try:
+        token = _jwt.request_callback()
+    except JWTError:
+        return
+
+    if token is None:
+        return
+
+    try:
+        payload = _jwt.jwt_decode_callback(token)
+    except jwt.InvalidTokenError as e:  # TODO do I inform the user of an expired token or let it go?
+        return
+
+    _request_ctx_stack.top.current_identity = identity = _jwt.identity_callback(payload)
+
+    if identity is None:
+        return
+
+
+def jwt_optional(realm=None):
+    """View decorator that sets the current_identity based on a JWT provided, even if not required
+
+    :param realm: an optional realm
+    """
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            _jwt_optional(realm or current_app.config['JWT_DEFAULT_REALM'])
             return fn(*args, **kwargs)
         return decorator
     return wrapper
