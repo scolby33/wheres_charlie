@@ -1,3 +1,5 @@
+import datetime
+
 from flask_jwt import JWT
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_security.utils import verify_and_update_password
@@ -39,8 +41,10 @@ def create_default_user():
     new_user = user_datastore.create_user(name='scott', password='pass')
     user_datastore.add_role_to_user(new_user, new_role)
     models.db.session.commit()
-    new_location = models.Location(user_id=new_user.user_id, location_string='Timbuktu')
+    new_location = models.Location(user_id=new_user.user_id, location_string='Timbuktu', active=True, date_time=datetime.datetime.now())
     models.db.session.add(new_location)
+    new_location2 = models.Location(user_id=new_user.user_id, location_string='Stanford', active=True, date_time=datetime.datetime.now() - datetime.timedelta(500))
+    models.db.session.add(new_location2)
     models.db.session.commit()
 
 models.db.create_all()
