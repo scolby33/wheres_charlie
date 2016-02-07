@@ -4,6 +4,14 @@ from flask_security.utils import verify_and_update_password
 
 from . import app, handlers, models
 
+class AuthenticatedIdentity(object):
+    def __init__(self, user, scopes):
+        self.user = user
+        self.scopes = scopes
+
+    def __repr__(self):
+        return '<{}.{} object user={}, scopes={}>'.format(self.__module__, self.__class__.__name__, self.user, self.scopes)
+
 
 def authenticate(username, password, scopes):
     user = user_datastore.get_user(username)
@@ -17,7 +25,8 @@ def authenticate(username, password, scopes):
 
 def identity(payload):
     user_id = payload['sub']
-    return user_datastore.get_user(user_id)
+    user = user_datastore.get_user(user_id)
+    return AuthenticatedIdentity(user, payload['scopes'])
 
 user_datastore = SQLAlchemyUserDatastore(models.db, models.User, models.Role)
 security = Security(app, user_datastore)
