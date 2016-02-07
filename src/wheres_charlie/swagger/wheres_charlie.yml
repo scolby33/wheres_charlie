@@ -20,10 +20,10 @@ paths:
           default: 10
         - name: page
           in: query
-          description: The page to return. Default `0`.
+          description: The page to return. Default `1`.
           type: integer
-          default: 0
-        - name: reverseChronological
+          default: 1
+        - name: reverse_chronological
           in: query
           description: Return the results in reverse chronological order (newest first) if `true`. In chronological order if `false`. Default `true`.
           type: boolean
@@ -303,10 +303,10 @@ paths:
           default: 10
         - name: page
           in: query
-          description: The page to return. Default `0`.
+          description: The page to return. Default `1`.
           type: integer
-          default: 0
-        - name: reverseChronological
+          default: 1
+        - name: reverse_chronological
           in: query
           description: Return the results in reverse chronological order (newest first) if `true`. In chronological order if `false`. Default `true`.
           type: boolean

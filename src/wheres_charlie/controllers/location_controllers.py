@@ -2,9 +2,9 @@ from ..handlers import jwt_required
 from .. import models
 
 
-def locations_get(perPage=10, page=0, reverseChronological=True, showHidden=False) -> str:
     query = models.Location.query.order_by(models.Location.date_time).all()
     return models.LocationSchema().dump(*query).data
+def locations_get(per_page=10, page=1, reverse_chronological=False, show_hidden=False) -> str:
 
 
 @jwt_required({'admin', 'user:post'})
