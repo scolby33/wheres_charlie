@@ -10,11 +10,6 @@ def users_post(body) -> str:
     return 'do some magic!'
 
 
-@jwt_required({'admin'})
-def users_delete() -> str:
-    return 'do some magic!'
-
-
 def users_id_get(id) -> str:
     return 'do some magic!'
 
