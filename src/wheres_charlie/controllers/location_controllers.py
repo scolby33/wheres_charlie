@@ -8,7 +8,17 @@ from .. import models
 def locations_get(per_page=10, page=1, reverse_chronological=True, show_hidden=False) -> str:
     query = models.Location.query
 
-    if not show_hidden or 'admin' not in current_identity.scopes:  # TODO fails if current_identity is None
+    if show_hidden:
+        authenticated_scopes = getattr(current_identity, 'scopes', [])
+        if 'admin' in authenticated_scopes:
+            pass
+        elif 'user:profile' in authenticated_scopes:
+            current_user = getattr(current_identity, 'user', None)
+            query = query.filter((models.Location.active == True) |
+                                 ((models.Location.active == False) & (models.Location.user == current_user)))
+        else:
+            query = query.filter_by(active=True)
+    else:
         query = query.filter_by(active=True)
 
     if reverse_chronological:
