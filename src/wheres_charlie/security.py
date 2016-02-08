@@ -29,6 +29,8 @@ def authenticate(username, password, scopes):
 def identity(payload):
     user_id = payload['sub']
     user = user_datastore.get_user(user_id)
+    if user is None:
+        return None
     return AuthenticatedIdentity(user, payload['scopes'])
 
 user_datastore = SQLAlchemyUserDatastore(models.db, models.User, models.Role)
