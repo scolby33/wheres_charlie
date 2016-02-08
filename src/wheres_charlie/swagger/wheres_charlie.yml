@@ -57,16 +57,6 @@ paths:
           description: The location update was created.
           schema:
             $ref: '#/definitions/Location'
-    delete:
-      tags:
-        - locations
-      summary: 'Delete *all* location updates. **USE WITH CAUTION.**'
-      operationId: wheres_charlie.controllers.location_controllers.locations_delete
-      security:
-        - wheres_charlie_key: []
-      responses:
-        '204':
-          description: All location updates were deleted.
   '/locations/{id}':
     get:
       tags:
@@ -211,16 +201,6 @@ paths:
           description: The user was created.
           schema:
             $ref: '#/definitions/User'
-    delete:
-      tags:
-        - users
-      summary: 'Delete *all* users. **USE WITH CAUTION.**'
-      operationId: wheres_charlie.controllers.user_controllers.users_delete
-      security:
-        - wheres_charlie_key: []
-      responses:
-        '204':
-          description: All users were deleted.
   '/users/{id}':
     get:
       tags:
