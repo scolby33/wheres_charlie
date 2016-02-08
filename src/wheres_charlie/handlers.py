@@ -17,7 +17,6 @@ def auth_request_handler():
     if data:
         username = data.get(current_app.config.get('JWT_AUTH_USERNAME_KEY'), None)
         password = data.get(current_app.config.get('JWT_AUTH_PASSWORD_KEY'), None)
-        # TODO fix this set
         scopes = set(data.get(current_app.config.get('JWT_AUTH_SCOPES_KEY'), set()))
         criterion = [username, password, scopes, len(data) == 3]
     else:
