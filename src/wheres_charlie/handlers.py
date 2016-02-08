@@ -1,6 +1,7 @@
 import datetime
 from functools import wraps
 
+# noinspection PyPackageRequirements
 import jwt
 
 from flask import current_app, request, jsonify, _request_ctx_stack

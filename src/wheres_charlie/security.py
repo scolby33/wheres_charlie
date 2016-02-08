@@ -6,6 +6,7 @@ from flask_security.utils import verify_and_update_password
 
 from . import app, handlers, models
 
+
 class AuthenticatedIdentity(object):
     def __init__(self, user, scopes):
         self.user = user
