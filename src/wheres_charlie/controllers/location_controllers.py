@@ -1,5 +1,6 @@
 from flask import abort
 from flask_jwt import current_identity
+from sqlalchemy import exc
 
 from ..jwt_handlers import jwt_required, jwt_optional
 from .. import models, exceptions
@@ -63,7 +64,20 @@ def locations_id_get(id) -> str:
 
 @jwt_required({'admin', 'user:post'})
 def locations_id_delete(id) -> str:
-    return 'do some magic!'
+    try:
+        location = models.Location.query.get(id)
+        if 'admin' in current_identity.scopes:
+            models.db.session.delete(location)
+        elif current_identity.user == location.user:
+            models.db.session.delete(location)
+        else:
+            raise exceptions.ClientError('You are not authorized to perform this action.', 401)
+    except exc.SQLAlchemyError:
+        models.db.session.rollback()
+    finally:
+        models.db.session.commit()
+
+    return 'Deletion successful', 204
 
 
 @jwt_required({'admin', 'user:post'})
