@@ -19,6 +19,12 @@ class Role(db.Model, RoleMixin):
     name = db.Column(db.String(64), unique=True)
     description = db.Column(db.String(255))
 
+    def get_id(self):
+        try:
+            return str(self.role_id)
+        except AttributeError:
+            raise NotImplementedError('No `role_id` attribute - override `get_id`')
+
 
 class User(db.Model, UserMixin):
     user_id = db.Column(db.Integer(), primary_key=True)
@@ -37,6 +43,13 @@ class User(db.Model, UserMixin):
     #         if param not in kwargs:
     #             kwargs[param] = defaults[param]
     #     super(Location, self).__init__(**kwargs)
+
+    def get_id(self):
+        try:
+            return str(self.user_id)
+        except AttributeError:
+            raise NotImplementedError('No `user_id` attribute - override `get_id`')
+
 
 class Location(db.Model):
     location_id = db.Column(db.Integer(), primary_key=True)
