@@ -79,3 +79,4 @@ class UserSchema(ma.ModelSchema):
 class LocationSchema(ma.ModelSchema):
     class Meta:
         model = Location
+    # TODO: do I need a post load method?

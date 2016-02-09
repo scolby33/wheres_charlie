@@ -36,6 +36,7 @@ def locations_get(per_page=10, page=1, reverse_chronological=True, show_hidden=F
 
 
 @jwt_required({'admin', 'user:post'})
+def locations_post(body) -> str:  # TODO: do I need try/except/finally in here?
     if body.get('user_id'):
         authenticated_scopes = getattr(current_identity, 'scopes', set())
         if 'admin' in authenticated_scopes:
@@ -73,7 +74,7 @@ def locations_id_get(id) -> str:
 
 
 @jwt_required({'admin', 'user:post'})
-def locations_id_delete(id) -> str:
+def locations_id_delete(id) -> str:  # TODO: do I need try/except/finally in here?
     try:
         location = models.Location.query.get(id)
         if 'admin' in current_identity.scopes:
