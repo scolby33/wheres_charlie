@@ -27,13 +27,12 @@ def locations_get(per_page=10, page=1, reverse_chronological=True, show_hidden=F
     else:
         query = query.order_by(models.Location.date_time.asc())
 
-    query = query.paginate(page, per_page, True)
+    query = query.paginate(page, per_page, False)
 
-    rv = []
-    for row in query.items:
-        rv.append(models.LocationSchema().dump(row).data)
-
-    return rv
+    if query.total:
+        return models.LocationSchema(many=True).dump(query.items).data
+    else:
+        raise exceptions.ClientError('No locations found matching this query.', status_code=404)
 
 
 @jwt_required({'admin', 'user:post'})
