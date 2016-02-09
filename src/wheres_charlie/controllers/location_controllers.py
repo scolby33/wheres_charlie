@@ -82,16 +82,19 @@ def locations_id_get(id) -> str:
 def locations_id_delete(id) -> str:  # TODO: do I need try/except/finally in here?
     try:
         location = models.Location.query.get(id)
+        if not location or (not location.active and location.user != current_identity.user):
+            raise exceptions.ClientError('The requested location does not exist.', 404)
         if 'admin' in current_identity.scopes:
             models.db.session.delete(location)
         elif current_identity.user == location.user:
             models.db.session.delete(location)
         else:
             raise exceptions.ClientError('You are not authorized to perform this action.', 401)
-    except exc.SQLAlchemyError:
+    except:
         models.db.session.rollback()
-    finally:
-        models.db.session.commit()
+        raise
+
+    models.db.session.commit()
 
     return 'Deletion successful', 204
 
