@@ -4,6 +4,9 @@ from ..jwt_handlers import jwt_required, jwt_optional
 from .. import models, exceptions
 
 
+# TODO: user:post vs user:profile for hidden updates
+# TODO: more detailed error messages a la flask_jwt
+
 @jwt_optional()
 def locations_get(per_page=10, page=1, reverse_chronological=True, show_hidden=False) -> str:
     query = models.Location.query
