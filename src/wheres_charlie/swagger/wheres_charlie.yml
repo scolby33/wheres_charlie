@@ -334,7 +334,7 @@ definitions:
       location_id:
         type: string
         format: byte
-      user_id:
+      user:
         type: string
         format: byte
       location_string:
