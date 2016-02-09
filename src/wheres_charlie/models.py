@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import UserMixin, RoleMixin
 from flask_marshmallow import Marshmallow
@@ -26,6 +28,15 @@ class User(db.Model, UserMixin):
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
     locations = db.relationship('Location', back_populates='user')
 
+    # def __init__(self, **kwargs):
+    #     defaults = {
+    #         'active': True,
+    #         'roles':
+    #     }
+    #     for param in defaults:
+    #         if param not in kwargs:
+    #             kwargs[param] = defaults[param]
+    #     super(Location, self).__init__(**kwargs)
 
 class Location(db.Model):
     location_id = db.Column(db.Integer(), primary_key=True)
@@ -34,6 +45,16 @@ class Location(db.Model):
     location_string = db.Column(db.String(255))
     date_time = db.Column(db.Date())
     active = db.Column(db.Boolean())
+
+    def __init__(self, **kwargs):
+        defaults = {
+            'date_time': datetime.now(),
+            'active': True
+        }
+        for param in defaults:
+            if param not in kwargs:
+                kwargs[param] = defaults[param]
+        super(Location, self).__init__(**kwargs)
 
 
 class UserSchema(ma.ModelSchema):
