@@ -18,7 +18,7 @@ def locations_get(per_page=10, page=1, reverse_chronological=True, show_hidden=F
             query = query.filter((models.Location.active == True) |
                                  ((models.Location.active == False) & (models.Location.user == current_user)))
         else:
-            query = query.filter_by(active=True)
+            raise exceptions.ClientError('You do not have the required authorization to see hidden records.', 401)
     else:
         query = query.filter_by(active=True)
 
