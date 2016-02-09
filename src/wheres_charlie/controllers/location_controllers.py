@@ -1,4 +1,3 @@
-from flask import abort
 from flask_jwt import current_identity
 from sqlalchemy import exc
 
@@ -59,7 +58,7 @@ def locations_id_get(id) -> str:
     if query.count():
         return models.LocationSchema().dump(query.first()).data
     else:
-        abort(404)
+        raise exceptions.ClientError('No location with this id.', 404)
 
 
 @jwt_required({'admin', 'user:post'})
