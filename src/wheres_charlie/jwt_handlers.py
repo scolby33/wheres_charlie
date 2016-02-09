@@ -12,7 +12,7 @@ _jwt = LocalProxy(lambda: current_app.extensions['jwt'])
 
 
 # Handlers for making an authorization request
-def auth_request_handler():
+def auth_request_handler():  # TODO: separate error message for disallowed scopes?
     data = request.get_json()
     if data:
         username = data.get(current_app.config.get('JWT_AUTH_USERNAME_KEY'), None)

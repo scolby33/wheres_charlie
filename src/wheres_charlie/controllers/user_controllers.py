@@ -1,4 +1,4 @@
-from ..handlers import jwt_required
+from ..jwt_handlers import jwt_required
 
 
 def users_get(per_page, page, show_hidden) -> str:

@@ -1,8 +1,8 @@
 from flask import abort
 from flask_jwt import current_identity
 
-from ..handlers import jwt_required, jwt_optional
-from .. import models
+from ..jwt_handlers import jwt_required, jwt_optional
+from .. import models, exceptions
 
 
 @jwt_optional()

@@ -4,7 +4,7 @@ from flask_jwt import JWT
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_security.utils import verify_and_update_password
 
-from . import app, handlers, models
+from . import app, jwt_handlers, models
 
 
 class AuthenticatedIdentity(object):
@@ -60,8 +60,8 @@ models.db.create_all()
 
 jwt = JWT(app=None, authentication_handler=authenticate, identity_handler=identity)
 jwt.app = app
-jwt.auth_request_callback = handlers.auth_request_handler
-jwt.jwt_encode_callback = handlers.encode_handler
-jwt.jwt_payload_callback = handlers.payload_handler
-jwt.auth_response_callback = handlers.auth_response_handler
+jwt.auth_request_callback = jwt_handlers.auth_request_handler
+jwt.jwt_encode_callback = jwt_handlers.encode_handler
+jwt.jwt_payload_callback = jwt_handlers.payload_handler
+jwt.auth_response_callback = jwt_handlers.auth_response_handler
 jwt.init_app(jwt.app)

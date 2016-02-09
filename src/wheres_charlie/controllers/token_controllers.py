@@ -1,4 +1,4 @@
-from ..handlers import auth_request_handler
+from ..jwt_handlers import auth_request_handler
 
 
 def token_post(body) -> str:
