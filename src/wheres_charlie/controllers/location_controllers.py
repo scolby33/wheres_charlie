@@ -1,3 +1,4 @@
+from flask import abort
 from flask_jwt import current_identity
 
 from ..handlers import jwt_required, jwt_optional
@@ -40,8 +41,25 @@ def locations_post(body) -> str:
     return 'do some magic!'
 
 
+@jwt_optional()
 def locations_id_get(id) -> str:
-    return 'do some magic!'
+    query = models.Location.query
+
+    authenticated_scopes = getattr(current_identity, 'scopes', set())
+    if 'admin' in authenticated_scopes:
+        query = query.filter_by(location_id=id)
+    elif 'user:profile' in authenticated_scopes:
+        current_user = getattr(current_identity, 'user', None)
+        query = query.filter((models.Location.active == True) |
+                             ((models.Location.active == False) & (models.Location.user == current_user)))\
+                             .filter_by(location_id=id)
+    else:
+        query = query.filter_by(active=True).filter_by(location_id=id)
+
+    if query.count():
+        return models.LocationSchema().dump(query.first()).data
+    else:
+        abort(404)
 
 
 @jwt_required({'admin', 'user:post'})
