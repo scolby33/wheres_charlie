@@ -1,5 +1,4 @@
 from flask_jwt import current_identity
-from sqlalchemy import exc
 
 from ..jwt_handlers import jwt_required, jwt_optional
 from .. import models, exceptions
