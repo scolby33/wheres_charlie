@@ -93,4 +93,18 @@ def locations_id_delete(id) -> str:  # TODO: do I need try/except/finally in her
 
 @jwt_required({'admin', 'user:post'})
 def locations_id_patch(id, body) -> str:
-    return 'do some magic!'
+    try:
+        location = models.Location.query.get(id)
+        if 'admin' in current_identity.scopes:
+            models.LocationSchema().load(body, instance=location)
+        elif current_identity.user == location.user and body.get('user', True) == current_identity.user.user_id:
+            models.LocationSchema().load(body, instance=location)
+        else:
+            raise exceptions.ClientError('You are not authorized to perform this action', 401)
+    except:
+        models.db.session.rollback()
+        raise
+
+    models.db.session.commit()
+
+    return models.LocationSchema().dump(location).data
