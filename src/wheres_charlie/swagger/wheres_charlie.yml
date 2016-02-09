@@ -9,6 +9,7 @@ paths:
       tags:
         - locations
       summary: List location updates.
+      description: If unauthenticated, get a list of publicly-viewable location updates. If authenticated with the `user:profile` scope, setting the parameter `show_hidden` to true will also return location updates marked as inactive that belong to that user. If authenticated with the `admin` scope, *all* location updates are returned, regardless of their active/inactive statuses.
       operationId: wheres_charlie.controllers.location_controllers.locations_get
       parameters:
         - name: per_page
@@ -20,8 +21,9 @@ paths:
           default: 10
         - name: page
           in: query
-          description: The page to return. Default `1`.
+          description: The page to return. Default `1`, minimum `1`.
           type: integer
+          minimum: 1
           default: 1
         - name: reverse_chronological
           in: query
@@ -30,7 +32,7 @@ paths:
           default: true
         - name: show_hidden
           in: query
-          description: Whether to show hidden location updates. Only available to administrators.
+          description: Whether to show hidden location updates. Only available to authenticated users. Default `false`.
           type: boolean
           default: false
       responses:
@@ -38,11 +40,16 @@ paths:
           description: The locations were retreived.
           schema:
             $ref: '#/definitions/ArrayOfLocations'
+        '401':
+          description: An unauthenticated request or a request made without a required scope (`admin` or `user:profile`) was made with `show_hidden` set to true.
+        '404':
+          description: No locations were found matching this query. Likely you have picked too high of a page number
     post:
       tags:
         - locations
       operationId: wheres_charlie.controllers.location_controllers.locations_post
       summary: Post a location update.
+      description: Must be authenticated with either the `admin` or `user:post` scope. Requests made with the `admin` scope allow impersonation. Requests made with `user:post` scope will post the location update as the authenticated user.
       parameters:
         - name: body
           in: body
@@ -57,11 +64,14 @@ paths:
           description: The location update was created.
           schema:
             $ref: '#/definitions/Location'
+        '401':
+          description: An unauthenticated request, a request made without a required scope (`admin` or `user:post`) was made, or a request lacking the `admin` scope was made with `user` set to a value other than that of the authenticated user.
   '/locations/{id}':
     get:
       tags:
         - locations
       summary: Get a location update.
+      description: If unauthenticated, the location with `id` is reteived if it exists and is active. If authenticated with the `user:profile` scope, inactive location updates belonging to the authenticated user can also be retreived. If authenticated with the `admin` scope, any existing location update with be retreived.
       operationId: wheres_charlie.controllers.location_controllers.locations_id_get
       parameters:
         - name: id
@@ -75,10 +85,13 @@ paths:
           description: The location update was retreived.
           schema:
             $ref: '#/definitions/Location'
+        '404':
+          description: The requested location update does not exist.
     delete:
       tags:
         - locations
       summary: Delete a location update.
+      description: If authenticated with the `user:post` scope, making this request will delete the location update with the given `id` if it belongs to the authenticated user. If authenticated with the `admin` scope, this request will delete the location update if it exists.
       operationId: wheres_charlie.controllers.location_controllers.locations_id_delete
       parameters:
         - name: id
@@ -92,10 +105,15 @@ paths:
       responses:
         '204':
           description: The location update was deleted.
+        '401':
+          description: An unauthenticated reuqest was made or a request made without the required scope (`admin` or `user:post`) and correct user was made.
+        '404':
+          description: The requested location update does not exist.
     patch:
       tags:
         - locations
-      summary: 'Update a location update. `location`, `dateTime`, and `hidden` can be updated by that user or admin. `userId` can be updated by admin.'
+      summary: Update a location update.
+      description: Update a location update with the provided object. Must be authenticated with the `admin` scope, allowing the updating of all the fields of any location, or the `user:post` scope, allowing the updating of all fields except `user` for all locations belonging to the authenticated user.
       operationId: wheres_charlie.controllers.location_controllers.locations_id_patch
       parameters:
         - name: id
@@ -121,12 +139,13 @@ paths:
     post:
       tags:
         - users
-      summary: Stuff
+      summary: Acquire an authentication token.
+      description: Acquire an authentication token for the given user and scopes. For access to authenticated endpoints pass the token in the `Authorization` header prefixed by the string `JWT` and a space, i.e. `JWT token-information-here`.
       operationId: wheres_charlie.controllers.token_controllers.token_post
       parameters:
         - name: body
           in: body
-          description: Stuff
+          description: The authentication details.
           required: true
           schema:
             type: object
@@ -152,6 +171,8 @@ paths:
           description: The authentication succeded.
           schema:
             $ref: '#/definitions/AccessToken'
+        '401':
+          description: Invalid authentication details were provided.
 
   /users:
     get:
@@ -171,6 +192,7 @@ paths:
           in: query
           description: The page to return. Default `0`.
           type: integer
+          minimum: 1
           default: 10
         - name: show_hidden
           in: query
