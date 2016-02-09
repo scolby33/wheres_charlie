@@ -37,19 +37,24 @@ def locations_get(per_page=10, page=1, reverse_chronological=True, show_hidden=F
 
 @jwt_required({'admin', 'user:post'})
 def locations_post(body) -> str:  # TODO: do I need try/except/finally in here?
-    if body.get('user_id'):
-        authenticated_scopes = getattr(current_identity, 'scopes', set())
-        if 'admin' in authenticated_scopes:
-            pass
-        elif body['user_id'] != current_identity.user.user_id:
-            raise exceptions.ClientError('You are not authorized to perform this action.', 401)
+    try:
+        if body.get('user_id'):
+            authenticated_scopes = getattr(current_identity, 'scopes', set())
+            if 'admin' in authenticated_scopes:
+                pass
+            elif body['user_id'] != current_identity.user.user_id:
+                raise exceptions.ClientError('You are not authorized to perform this action.', 401)
 
-    new_location = models.LocationSchema().load(body).data
+        new_location = models.LocationSchema().load(body).data
 
-    models.db.session.add(new_location)
+        models.db.session.add(new_location)
+    except:
+        models.db.session.rollback()
+        raise
+
     models.db.session.commit()
 
-    return models.LocationSchema().dump(new_location).data
+    return models.LocationSchema().dump(new_location).data, 201
 
 
 @jwt_optional()
