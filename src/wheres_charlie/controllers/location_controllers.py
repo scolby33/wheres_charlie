@@ -9,7 +9,7 @@ def locations_get(per_page=10, page=1, reverse_chronological=True, show_hidden=F
     query = models.Location.query
 
     if show_hidden:
-        authenticated_scopes = getattr(current_identity, 'scopes', [])
+        authenticated_scopes = getattr(current_identity, 'scopes', set())
         if 'admin' in authenticated_scopes:
             pass
         elif 'user:profile' in authenticated_scopes:

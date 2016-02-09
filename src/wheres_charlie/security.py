@@ -10,7 +10,7 @@ from . import app, handlers, models
 class AuthenticatedIdentity(object):
     def __init__(self, user, scopes):
         self.user = user
-        self.scopes = scopes
+        self.scopes = set(scopes)
 
     def __repr__(self):
         return '<{}.{} object user={}, scopes={}>'.format(self.__module__, self.__class__.__name__, self.user, self.scopes)
