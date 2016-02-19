@@ -58,6 +58,7 @@ def create_default_user():
     new_location3 = models.Location(user_id=new_user.user_id, location_string='Secret Location', active=False, date_time=datetime.datetime.now() - datetime.timedelta(50))
     models.db.session.add(new_location3)
     models.db.session.commit()
+    print(new_user.user_id)
 
 models.db.create_all()
 
