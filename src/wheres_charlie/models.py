@@ -1,4 +1,5 @@
 from datetime import datetime
+from random import SystemRandom
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import UserMixin, RoleMixin
@@ -6,8 +7,18 @@ from flask_marshmallow import Marshmallow
 
 from . import app
 
+sys_random = SystemRandom()
+
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
+
+
+def random_hex_bytes(length: int) -> str:
+    """Return a string representing random bytes in hexadecimal
+    :param length: The number of random bytes to return
+    :type length: int
+    """
+    return '{:02x}'.format(sys_random.getrandbits(length * 8))
 
 roles_users = db.Table('roles_users',
                        db.Column('user_id', db.Integer(), db.ForeignKey('user.user_id')),
@@ -15,7 +26,7 @@ roles_users = db.Table('roles_users',
 
 
 class Role(db.Model, RoleMixin):
-    role_id = db.Column(db.Integer(), primary_key=True)
+    role_id = db.Column(db.String(8), default=lambda: random_hex_bytes(4), primary_key=True)
     name = db.Column(db.String(64), unique=True)
     description = db.Column(db.String(255))
 
@@ -27,7 +38,7 @@ class Role(db.Model, RoleMixin):
 
 
 class User(db.Model, UserMixin):
-    user_id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.String(8), default=lambda: random_hex_bytes(4), primary_key=True)
     name = db.Column(db.String(64), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
