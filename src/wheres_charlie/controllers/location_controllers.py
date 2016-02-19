@@ -20,7 +20,7 @@ def locations_get(per_page=10, page=1, reverse_chronological=True, show_hidden=F
             query = query.filter((models.Location.active == True) |
                                  ((models.Location.active == False) & (models.Location.user == current_user)))
         else:
-            raise exceptions.ClientError('You do not have the required authorization to see hidden records.', 401)
+            raise exceptions.ClientError('You do not have the required authorization to see hidden records.', status_code=401)
     else:
         query = query.filter_by(active=True)
 
@@ -45,7 +45,7 @@ def locations_post(body) -> str:  # TODO: do I need try/except/finally in here?
             if 'admin' in authenticated_scopes:
                 pass
             elif body['user_id'] != current_identity.user.user_id:
-                raise exceptions.ClientError('You are not authorized to perform this action.', 401)
+                raise exceptions.ClientError('You are not authorized to perform this action.', status_code=401)
 
         new_location = models.LocationSchema().load(body).data
 
@@ -77,7 +77,7 @@ def locations_id_get(id) -> str:
     if query.count():
         return models.LocationSchema().dump(query.first()).data
     else:
-        raise exceptions.ClientError('No location with this id.', 404)
+        raise exceptions.ClientError('No location with this id.', status_code=404)
 
 
 @jwt_required({'admin', 'user:post'})
@@ -85,13 +85,13 @@ def locations_id_delete(id) -> str:  # TODO: do I need try/except/finally in her
     try:
         location = models.Location.query.get(id)
         if not location or (not location.active and location.user != current_identity.user):
-            raise exceptions.ClientError('The requested location does not exist.', 404)
+            raise exceptions.ClientError('The requested location does not exist.', status_code=404)
         if 'admin' in current_identity.scopes:
             models.db.session.delete(location)
         elif current_identity.user == location.user:
             models.db.session.delete(location)
         else:
-            raise exceptions.ClientError('You are not authorized to perform this action.', 401)
+            raise exceptions.ClientError('You are not authorized to perform this action.', status_code=401)
     except:
         models.db.session.rollback()
         raise
@@ -110,7 +110,7 @@ def locations_id_patch(id, body) -> str:
         elif current_identity.user == location.user and body.get('user', True) == current_identity.user.user_id:
             models.LocationSchema().load(body, instance=location)
         else:
-            raise exceptions.ClientError('You are not authorized to perform this action', 401)
+            raise exceptions.ClientError('You are not authorized to perform this action', status_code=401)
     except:
         models.db.session.rollback()
         raise
